@@ -53,106 +53,106 @@ export default function DashboardPage() {
   const confusions = profile ? getTopConfusions(profile.confusion, 3) : []
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto py-4 sm:py-6 lg:py-8 px-4 sm:px-6">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2">Typing Coach</h1>
-        <p className="text-muted-foreground">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mb-2">Typing Coach</h1>
+        <p className="text-sm sm:text-base lg:text-lg text-muted-foreground">
           Local-first typing game with weakness diagnosis and adaptive training
         </p>
       </div>
 
       {/* Quick Actions */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 mb-8">
+      <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mb-6 sm:mb-8">
         <Card className="hover:shadow-lg transition-shadow cursor-pointer group focus-within:ring-2 focus-within:ring-primary">
           <Link href="/play?mode=timed&duration=60" className="block">
-            <CardContent className="p-6 text-center">
-              <div className="text-2xl mb-2" aria-hidden="true">⚡</div>
-              <h3 className="text-lg font-semibold mb-1">Standard Test</h3>
-              <p className="text-sm text-muted-foreground">60 seconds timed challenge</p>
+            <CardContent className="p-4 sm:p-6 text-center min-h-[120px] sm:min-h-[140px] flex flex-col justify-center">
+              <div className="text-xl sm:text-2xl mb-2" aria-hidden="true">⚡</div>
+              <h3 className="text-base sm:text-lg font-semibold mb-1">Standard Test</h3>
+              <p className="text-xs sm:text-sm text-muted-foreground">60 seconds timed challenge</p>
             </CardContent>
           </Link>
         </Card>
 
         <CustomTimerDialog>
           <Card className="hover:shadow-lg transition-shadow cursor-pointer group focus-within:ring-2 focus-within:ring-primary" tabIndex={0}>
-            <CardContent className="p-6 text-center">
-              <div className="text-2xl mb-2" aria-hidden="true">⏱️</div>
-              <h3 className="text-lg font-semibold mb-1">Custom Timer</h3>
-              <p className="text-sm text-muted-foreground">Set your own duration</p>
+            <CardContent className="p-4 sm:p-6 text-center min-h-[120px] sm:min-h-[140px] flex flex-col justify-center">
+              <div className="text-xl sm:text-2xl mb-2" aria-hidden="true">⏱️</div>
+              <h3 className="text-base sm:text-lg font-semibold mb-1">Custom Timer</h3>
+              <p className="text-xs sm:text-sm text-muted-foreground">Set your own duration</p>
             </CardContent>
           </Card>
         </CustomTimerDialog>
 
         <Card className="hover:shadow-lg transition-shadow cursor-pointer group focus-within:ring-2 focus-within:ring-primary">
           <Link href="/play?mode=paragraph" className="block">
-            <CardContent className="p-6 text-center">
-              <div className="text-2xl mb-2" aria-hidden="true">📝</div>
-              <h3 className="text-lg font-semibold mb-1">Paragraph</h3>
-              <p className="text-sm text-muted-foreground">Classic paragraph mode</p>
+            <CardContent className="p-4 sm:p-6 text-center min-h-[120px] sm:min-h-[140px] flex flex-col justify-center">
+              <div className="text-xl sm:text-2xl mb-2" aria-hidden="true">📝</div>
+              <h3 className="text-base sm:text-lg font-semibold mb-1">Paragraph</h3>
+              <p className="text-xs sm:text-sm text-muted-foreground">Classic paragraph mode</p>
             </CardContent>
           </Link>
         </Card>
 
         <ArticleSelectionDialog>
           <Card className="hover:shadow-lg transition-shadow cursor-pointer group focus-within:ring-2 focus-within:ring-primary" tabIndex={0}>
-            <CardContent className="p-6 text-center">
-              <div className="text-2xl mb-2" aria-hidden="true">📚</div>
-              <h3 className="text-lg font-semibold mb-1">Article Practice</h3>
-              <p className="text-sm text-muted-foreground">Type with real articles</p>
+            <CardContent className="p-4 sm:p-6 text-center min-h-[120px] sm:min-h-[140px] flex flex-col justify-center">
+              <div className="text-xl sm:text-2xl mb-2" aria-hidden="true">📚</div>
+              <h3 className="text-base sm:text-lg font-semibold mb-1">Article Practice</h3>
+              <p className="text-xs sm:text-sm text-muted-foreground">Type with real articles</p>
             </CardContent>
           </Card>
         </ArticleSelectionDialog>
       </div>
 
       {/* Today's Stats */}
-      <div className="grid gap-4 md:grid-cols-3 mb-8">
+      <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-3 mb-6 sm:mb-8">
         <Card>
-          <CardContent className="p-6">
+          <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground mb-1">Today's Practice</p>
-                <p className="text-3xl font-bold">{todayStats.totalTime}m</p>
+                <p className="text-xs sm:text-sm text-muted-foreground mb-1">Today's Practice</p>
+                <p className="text-2xl sm:text-3xl font-bold">{todayStats.totalTime}m</p>
               </div>
-              <div className="text-3xl">⏰</div>
+              <div className="text-2xl sm:text-3xl">⏰</div>
             </div>
           </CardContent>
         </Card>
         
         <Card>
-          <CardContent className="p-6">
+          <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground mb-1">Average WPM</p>
-                <p className="text-3xl font-bold">
+                <p className="text-xs sm:text-sm text-muted-foreground mb-1">Average WPM</p>
+                <p className="text-2xl sm:text-3xl font-bold">
                   {todayStats.avgWPM || "—"}
                 </p>
               </div>
-              <div className="text-3xl">⚡</div>
+              <div className="text-2xl sm:text-3xl">⚡</div>
             </div>
           </CardContent>
         </Card>
         
         <Card>
-          <CardContent className="p-6">
+          <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground mb-1">Accuracy</p>
-                <p className="text-3xl font-bold">
+                <p className="text-xs sm:text-sm text-muted-foreground mb-1">Accuracy</p>
+                <p className="text-2xl sm:text-3xl font-bold">
                   {todayStats.avgAccuracy ? `${todayStats.avgAccuracy}%` : "—"}
                 </p>
               </div>
-              <div className="text-3xl">🎯</div>
+              <div className="text-2xl sm:text-3xl">🎯</div>
             </div>
           </CardContent>
         </Card>
       </div>
 
       {/* Weakness Analysis */}
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 sm:gap-6 grid-cols-1 lg:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Weakest Keys</CardTitle>
-            <CardDescription>Keys that need the most practice</CardDescription>
+            <CardTitle className="text-lg sm:text-xl">Weakest Keys</CardTitle>
+            <CardDescription className="text-sm sm:text-base">Keys that need the most practice</CardDescription>
           </CardHeader>
           <CardContent>
             {weakKeys.length === 0 ? (
@@ -181,8 +181,8 @@ export default function DashboardPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Common Confusions</CardTitle>
-            <CardDescription>Keys you often mix up</CardDescription>
+            <CardTitle className="text-lg sm:text-xl">Common Confusions</CardTitle>
+            <CardDescription className="text-sm sm:text-base">Keys you often mix up</CardDescription>
           </CardHeader>
           <CardContent>
             {confusions.length === 0 ? (

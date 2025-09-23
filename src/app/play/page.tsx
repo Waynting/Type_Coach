@@ -338,33 +338,33 @@ function PlayContent() {
   }
 
   return (
-    <div className="container mx-auto py-4 max-w-4xl">
+    <div className="container mx-auto py-2 sm:py-4 lg:py-6 max-w-4xl px-4 sm:px-6">
       <div className="mb-4">
-        <div className="flex justify-between items-center mb-2">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0 mb-3 sm:mb-2">
           <div className="flex items-center gap-3">
             <Link href="/">
               <Button 
                 variant="ghost" 
                 size="sm"
-                className="text-muted-foreground hover:text-foreground"
+                className="text-muted-foreground hover:text-foreground min-h-[44px] px-3 py-2 touch-manipulation"
                 aria-label="Back to dashboard"
               >
                 ← Back
               </Button>
             </Link>
-            <h1 className="text-2xl font-bold">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold">
               {getTitle()}
             </h1>
           </div>
           {gameState === "playing" && (mode === "timed" || mode === "drill") && (
-            <div className="text-3xl font-mono font-bold text-primary">
+            <div className="text-2xl sm:text-3xl lg:text-4xl font-mono font-bold text-primary self-center sm:self-auto">
               {timeLeft}s
             </div>
           )}
         </div>
         
         {/* Progress */}
-        <Progress value={progress} className="h-2" />
+        <Progress value={progress} className="h-2 sm:h-3" />
       </div>
 
       {/* Main typing area */}
@@ -372,14 +372,13 @@ function PlayContent() {
         <CardContent className="p-4">
           {/* Continuous Text Flow - 3 Line Window */}
           <div 
-            className="relative bg-muted/50 p-6 rounded-lg font-mono text-xl leading-normal mb-4 text-left max-w-4xl mx-auto overflow-hidden transition-all duration-150 ease-out"
+            className="relative bg-muted/50 p-3 sm:p-4 md:p-6 rounded-lg font-mono text-base sm:text-lg md:text-xl lg:text-2xl leading-normal mb-4 text-left max-w-4xl mx-auto overflow-hidden transition-all duration-150 ease-out h-[90px] sm:h-[105px] md:h-[120px] lg:h-[135px]"
             role="region"
             aria-label="Text to type"
             aria-live="polite"
             aria-atomic="false"
             style={{ 
-              height: '120px', // Fixed height for exactly 3 lines
-              lineHeight: '1.5em' // 40px per line = 120px total
+              lineHeight: '1.5em'
             }}
           >
             <div className="whitespace-pre-wrap break-words">
@@ -441,26 +440,26 @@ function PlayContent() {
 
           {/* Compact Live Stats - Progressive Disclosure */}
           {(gameState === "playing" || gameState === "finished") && (
-            <div id="progress-info" className="flex justify-center gap-6 text-center" role="region" aria-label="Typing statistics">
+            <div id="progress-info" className="flex flex-wrap justify-center gap-3 sm:gap-4 md:gap-6 text-center" role="region" aria-label="Typing statistics">
               {/* Essential stats during typing */}
-              <div className="bg-muted/50 rounded px-3 py-2">
-                <p className="text-xs text-muted-foreground">WPM</p>
-                <p className="text-xl font-bold" aria-label={`${sessionStats.wpm} words per minute`}>{sessionStats.wpm}</p>
+              <div className="bg-muted/50 rounded px-3 sm:px-4 py-2 sm:py-3 min-w-[80px] sm:min-w-[90px]">
+                <p className="text-xs sm:text-sm text-muted-foreground">WPM</p>
+                <p className="text-lg sm:text-xl lg:text-2xl font-bold" aria-label={`${sessionStats.wpm} words per minute`}>{sessionStats.wpm}</p>
               </div>
-              <div className="bg-muted/50 rounded px-3 py-2">
-                <p className="text-xs text-muted-foreground">Accuracy</p>
-                <p className="text-xl font-bold" aria-label={`${sessionStats.accuracy} percent accuracy`}>{sessionStats.accuracy}%</p>
+              <div className="bg-muted/50 rounded px-3 sm:px-4 py-2 sm:py-3 min-w-[80px] sm:min-w-[90px]">
+                <p className="text-xs sm:text-sm text-muted-foreground">Accuracy</p>
+                <p className="text-lg sm:text-xl lg:text-2xl font-bold" aria-label={`${sessionStats.accuracy} percent accuracy`}>{sessionStats.accuracy}%</p>
               </div>
               {/* Show additional stats only when finished */}
               {gameState === "finished" && (
                 <>
-                  <div className="bg-muted/50 rounded px-3 py-2">
-                    <p className="text-xs text-muted-foreground">Characters</p>
-                    <p className="text-xl font-bold" aria-label={`${sessionStats.correctChars} correct characters`}>{sessionStats.correctChars}</p>
+                  <div className="bg-muted/50 rounded px-3 sm:px-4 py-2 sm:py-3 min-w-[80px] sm:min-w-[90px]">
+                    <p className="text-xs sm:text-sm text-muted-foreground">Characters</p>
+                    <p className="text-lg sm:text-xl lg:text-2xl font-bold" aria-label={`${sessionStats.correctChars} correct characters`}>{sessionStats.correctChars}</p>
                   </div>
-                  <div className="bg-muted/50 rounded px-3 py-2">
-                    <p className="text-xs text-muted-foreground">Errors</p>
-                    <p className="text-xl font-bold" aria-label={`${sessionStats.totalChars - sessionStats.correctChars} errors`}>{sessionStats.totalChars - sessionStats.correctChars}</p>
+                  <div className="bg-muted/50 rounded px-3 sm:px-4 py-2 sm:py-3 min-w-[80px] sm:min-w-[90px]">
+                    <p className="text-xs sm:text-sm text-muted-foreground">Errors</p>
+                    <p className="text-lg sm:text-xl lg:text-2xl font-bold" aria-label={`${sessionStats.totalChars - sessionStats.correctChars} errors`}>{sessionStats.totalChars - sessionStats.correctChars}</p>
                   </div>
                 </>
               )}
@@ -475,18 +474,18 @@ function PlayContent() {
           
           {/* Compact Actions */}
           {gameState !== "ready" && (
-            <div className="flex justify-center gap-3 mt-4">
+            <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mt-4">
               {gameState === "playing" && (
-                <Button size="sm" variant="outline" onClick={endGame}>
+                <Button size="sm" variant="outline" onClick={endGame} className="min-h-[44px] px-4 py-2 touch-manipulation">
                   Finish Early
                 </Button>
               )}
               {gameState === "finished" && (
                 <>
-                  <Button size="sm" variant="outline" onClick={() => window.location.reload()}>
+                  <Button size="sm" variant="outline" onClick={() => window.location.reload()} className="min-h-[44px] px-4 py-2 touch-manipulation">
                     Try Again
                   </Button>
-                  <Button size="sm" onClick={() => router.push("/")}>
+                  <Button size="sm" onClick={() => router.push("/")} className="min-h-[44px] px-4 py-2 touch-manipulation">
                     Dashboard
                   </Button>
                 </>
@@ -498,7 +497,7 @@ function PlayContent() {
 
       {/* Compact Instructions - Only when ready */}
       {gameState === "ready" && (
-        <div id="typing-instructions" className="mt-4 text-center text-muted-foreground text-sm" role="region" aria-label="Instructions">
+        <div id="typing-instructions" className="mt-4 px-4 text-center text-muted-foreground text-sm sm:text-base" role="region" aria-label="Instructions">
           <p>Start typing to begin immediately • Type the highlighted character • Mistakes will flash red</p>
         </div>
       )}
