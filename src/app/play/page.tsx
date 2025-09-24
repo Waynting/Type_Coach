@@ -45,6 +45,8 @@ function PlayContent() {
     totalChars: 0,
     backspaces: 0
   })
+  const [lineBreakPoints, setLineBreakPoints] = useState<number[]>([])
+  const [currentLineIndex, setCurrentLineIndex] = useState(0)
   
   const lastKeystrokeTime = useRef<number>(0)
   const sessionStartTime = useRef<number>(0)
@@ -81,6 +83,40 @@ function PlayContent() {
     }
   }, [mode, duration, articleId, includeNumbers, router])
 
+  // Calculate line break points when target text changes
+  useEffect(() => {
+    if (!targetText) return
+    
+    const charsPerLine = 60  // Reduced from 65 to break earlier
+    const breakPoints: number[] = []
+    let currentPos = 0
+    
+    while (currentPos < targetText.length) {
+      // Set initial line end earlier to leave more buffer
+      let lineEnd = currentPos + charsPerLine - 5  // Subtract 5 for earlier break
+      
+      // If we're not at the end of the text, find the last space before line end
+      if (lineEnd < targetText.length) {
+        let lastSpace = lineEnd
+        // Look back up to 20 chars for a space (increased from 15)
+        while (lastSpace > currentPos + charsPerLine - 25 && targetText[lastSpace] !== ' ') {
+          lastSpace--
+        }
+        // If we found a space, use it
+        if (targetText[lastSpace] === ' ' && lastSpace > currentPos) {
+          lineEnd = lastSpace - 1  // Break right before the space
+        }
+      } else {
+        lineEnd = targetText.length - 1
+      }
+      
+      breakPoints.push(lineEnd)
+      currentPos = lineEnd + 2  // Skip the space when starting next line
+    }
+    
+    setLineBreakPoints(breakPoints)
+  }, [targetText])
+
   // Auto-focus input and prepare for immediate typing
   useEffect(() => {
     if (targetText && gameState === "ready") {
@@ -104,14 +140,6 @@ function PlayContent() {
     }
   }, [gameState, timeLeft, mode])
 
-  const startGame = () => {
-    setGameState("playing")
-    setCurrentIndex(0)
-    setUserInput("")
-    sessionStartTime.current = performance.now()
-    lastKeystrokeTime.current = performance.now()
-    inputRef.current?.focus()
-  }
 
   const endGame = async () => {
     setGameState("finished")
@@ -149,6 +177,7 @@ function PlayContent() {
       setGameState("playing")
       setCurrentIndex(0)
       setUserInput("")
+      setCurrentLineIndex(0)
       sessionStartTime.current = performance.now()
       lastKeystrokeTime.current = performance.now()
     }
@@ -229,6 +258,11 @@ function PlayContent() {
       setUserInput(prev => prev + e.key)
       setCurrentIndex(prev => prev + 1)
       
+      // Check if we've reached a line break point
+      if (lineBreakPoints.includes(currentIndex)) {
+        setCurrentLineIndex(prev => prev + 1)
+      }
+      
       // Check if finished paragraph or article mode
       if ((mode === "paragraph" || mode === "article") && currentIndex + 1 >= targetText.length) {
         endGame()
@@ -259,22 +293,33 @@ function PlayContent() {
 
   // Calculate text window with MonkeyType-style line wrapping
   const getTextWindow = () => {
-    if (!targetText) return { 
+    if (!targetText || lineBreakPoints.length === 0) return { 
       windowText: "", 
       relativeCurrentIndex: 0,
       windowStart: 0 
     }
     
-    // Estimate characters per line based on container width and font size
-    const charsPerLine = 65
     const totalLines = 3
     
-    // Calculate which global line the current character is on
-    const currentGlobalLine = Math.floor(currentIndex / charsPerLine)
+    // Determine window start based on current line index
+    let windowStartLine = 0
     
-    // Position window so current line appears as the 2nd line (index 1)
-    const windowStartLine = Math.max(0, currentGlobalLine - 1)
-    let windowStart = windowStartLine * charsPerLine
+    if (currentLineIndex === 0) {
+      // First line - show lines 0-2
+      windowStartLine = 0
+    } else if (currentLineIndex === 1) {
+      // Second line - still show lines 0-2
+      windowStartLine = 0
+    } else {
+      // Third line or beyond - show current line as middle line
+      windowStartLine = currentLineIndex - 1
+    }
+    
+    // Calculate actual character positions from line break points
+    let windowStart = 0
+    if (windowStartLine > 0) {
+      windowStart = lineBreakPoints[windowStartLine - 1] + 1
+    }
     
     // Adjust to word boundaries at start - don't break words
     if (windowStart > 0) {
@@ -293,21 +338,12 @@ function PlayContent() {
       }
     }
     
-    // Calculate window end for exactly 3 lines worth of text
-    const totalWindowChars = charsPerLine * totalLines
-    let windowEnd = Math.min(targetText.length, windowStart + totalWindowChars)
+    // Calculate window end based on line break points
+    const windowEndLine = Math.min(windowStartLine + totalLines - 1, lineBreakPoints.length - 1)
+    let windowEnd = lineBreakPoints[windowEndLine] + 1
     
-    // Adjust end to word boundary, but not too far
-    if (windowEnd < targetText.length) {
-      let originalEnd = windowEnd
-      while (windowEnd < targetText.length && targetText[windowEnd] !== ' ' && (windowEnd - originalEnd) < 15) {
-        windowEnd++
-      }
-      // If we went too far, use original position
-      if ((windowEnd - originalEnd) >= 15) {
-        windowEnd = originalEnd
-      }
-    }
+    // Make sure we don't go past the text length
+    windowEnd = Math.min(windowEnd, targetText.length)
     
     const windowText = targetText.slice(windowStart, windowEnd)
     const relativeCurrentIndex = currentIndex - windowStart
