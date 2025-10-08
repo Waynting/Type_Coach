@@ -210,6 +210,11 @@ function PlayContent() {
       e.preventDefault()
       setSessionStats(prev => ({ ...prev, backspaces: prev.backspaces + 1 }))
       if (currentIndex > 0) {
+        const newIndex = currentIndex - 1
+        // Check if we're going back across a line break point
+        if (lineBreakPoints.includes(newIndex)) {
+          setCurrentLineIndex(prev => Math.max(0, prev - 1))
+        }
         setCurrentIndex(prev => prev - 1)
         setUserInput(prev => prev.slice(0, -1))
       }
@@ -256,9 +261,12 @@ function PlayContent() {
       
       setKeystrokes(prev => [...prev, keystroke])
       setUserInput(prev => prev + e.key)
-      setCurrentIndex(prev => prev + 1)
-      
-      // Check if we've reached a line break point
+
+      const newIndex = currentIndex + 1
+      setCurrentIndex(newIndex)
+
+      // Check if we've crossed a line break point (regardless of correctness)
+      // currentLineIndex should reflect the physical position, not input correctness
       if (lineBreakPoints.includes(currentIndex)) {
         setCurrentLineIndex(prev => prev + 1)
       }
@@ -300,18 +308,17 @@ function PlayContent() {
     }
     
     const totalLines = 3
-    
+
     // Determine window start based on current line index
+    // Always keep cursor on the second line (middle line) for smooth scrolling
     let windowStartLine = 0
-    
+
     if (currentLineIndex === 0) {
-      // First line - show lines 0-2
-      windowStartLine = 0
-    } else if (currentLineIndex === 1) {
-      // Second line - still show lines 0-2
+      // First line - show lines 0-2, cursor on first line
       windowStartLine = 0
     } else {
-      // Third line or beyond - show current line as middle line
+      // From second line onwards - keep cursor on middle line (line 1 of window)
+      // So window shows: [currentLineIndex-1, currentLineIndex, currentLineIndex+1]
       windowStartLine = currentLineIndex - 1
     }
     

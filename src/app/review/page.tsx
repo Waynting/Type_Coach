@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { db, getProfile } from "@/lib/db"
+import { db, getProfile, deleteSession } from "@/lib/db"
 import { getTopWeakKeys, getTopWeakBigrams, getTopConfusions } from "@/engine/weakness"
 import type { Session, Profile } from "@/engine/types"
 
@@ -17,7 +17,24 @@ function ReviewContent() {
   const [session, setSession] = useState<Session | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
   const [recommendations, setRecommendations] = useState<string[]>([])
-  
+  const [isDeleting, setIsDeleting] = useState(false)
+
+  const handleDeleteSession = async () => {
+    if (!sessionId || !confirm("Are you sure you want to delete this session? This action cannot be undone.")) {
+      return
+    }
+
+    setIsDeleting(true)
+    try {
+      await deleteSession(sessionId)
+      router.push("/")
+    } catch (error) {
+      console.error("Failed to delete session:", error)
+      alert("Failed to delete session. Please try again.")
+      setIsDeleting(false)
+    }
+  }
+
   useEffect(() => {
     async function loadData() {
       if (!sessionId) {
@@ -212,13 +229,21 @@ function ReviewContent() {
       </Card>
       
       {/* Actions */}
-      <div className="flex gap-4 justify-center">
+      <div className="flex flex-wrap gap-4 justify-center">
         <Link href="/play?mode=drill&duration=60">
           <Button size="lg">Start Adaptive Drill</Button>
         </Link>
         <Link href="/">
           <Button size="lg" variant="outline">Back to Dashboard</Button>
         </Link>
+        <Button
+          size="lg"
+          variant="destructive"
+          onClick={handleDeleteSession}
+          disabled={isDeleting}
+        >
+          {isDeleting ? "Deleting..." : "Delete This Session"}
+        </Button>
       </div>
     </div>
   )

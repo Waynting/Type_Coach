@@ -55,10 +55,19 @@ export default function DashboardPage() {
   return (
     <div className="container mx-auto py-4 sm:py-6 lg:py-8 px-4 sm:px-6">
       <div className="mb-8">
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mb-2">Typing Coach</h1>
-        <p className="text-sm sm:text-base lg:text-lg text-muted-foreground">
-          Local-first typing game with weakness diagnosis and adaptive training
-        </p>
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+          <div>
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mb-2">Typing Coach</h1>
+            <p className="text-sm sm:text-base lg:text-lg text-muted-foreground">
+              Local-first typing game with weakness diagnosis and adaptive training
+            </p>
+          </div>
+          <Link href="/sessions">
+            <Button variant="outline" className="self-start">
+              View All Sessions
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Quick Actions */}

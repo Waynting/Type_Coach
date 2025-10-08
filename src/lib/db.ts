@@ -80,8 +80,33 @@ export async function importData(data: {
   // Clear existing data
   await db.sessions.clear();
   resetProfile();
-  
+
   // Import new data
   saveProfile(data.profile);
   await db.sessions.bulkAdd(data.sessions);
+}
+
+export async function deleteSession(sessionId: string): Promise<void> {
+  await db.sessions.delete(sessionId);
+
+  // Also remove from profile history
+  const profile = getProfile();
+  profile.history = profile.history.filter(id => id !== sessionId);
+  saveProfile(profile);
+}
+
+export async function deleteAllSessions(): Promise<void> {
+  await db.sessions.clear();
+
+  // Clear profile history and reset stats
+  const profile = getProfile();
+  profile.history = [];
+  profile.keyStats = {};
+  profile.bigramStats = {};
+  profile.confusion = {};
+  saveProfile(profile);
+}
+
+export async function getSessionById(sessionId: string): Promise<Session | undefined> {
+  return await db.sessions.get(sessionId);
 }
