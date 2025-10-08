@@ -8,6 +8,7 @@ import { getProfile, getRecentSessions } from "@/lib/db"
 import { getTopWeakKeys, getTopConfusions } from "@/engine/weakness"
 import { CustomTimerDialog } from "@/components/CustomTimerDialog"
 import { ArticleSelectionDialog } from "@/components/ArticleSelectionDialog"
+import { ThemeToggle } from "@/components/ThemeToggle"
 import type { Profile, Session } from "@/engine/types"
 
 export default function DashboardPage() {
@@ -62,11 +63,14 @@ export default function DashboardPage() {
               Local-first typing game with weakness diagnosis and adaptive training
             </p>
           </div>
-          <Link href="/sessions">
-            <Button variant="outline" className="self-start">
-              View All Sessions
-            </Button>
-          </Link>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <Link href="/sessions">
+              <Button variant="outline" className="self-start">
+                View All Sessions
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
 
@@ -202,15 +206,15 @@ export default function DashboardPage() {
             ) : (
               <div className="space-y-3">
                 {confusions.map(({ expected, received, count }) => (
-                  <div key={`${expected}|${received}`} className="flex justify-between items-center p-3 bg-red-50 border border-red-100 rounded-lg">
+                  <div key={`${expected}|${received}`} className="flex justify-between items-center p-3 bg-red-50 dark:bg-red-950/30 border border-red-100 dark:border-red-900/30 rounded-lg">
                     <div className="flex items-center gap-3">
                       <span className="font-mono text-lg">
-                        <span className="text-green-600">{expected.replace('Key', '')}</span>
+                        <span className="text-green-600 dark:text-green-400">{expected.replace('Key', '')}</span>
                         <span className="mx-2 text-muted-foreground">→</span>
-                        <span className="text-red-600">{received.replace('Key', '')}</span>
+                        <span className="text-red-600 dark:text-red-400">{received.replace('Key', '')}</span>
                       </span>
                     </div>
-                    <span className="text-sm font-medium bg-red-100 text-red-700 px-2 py-1 rounded">×{count}</span>
+                    <span className="text-sm font-medium bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 px-2 py-1 rounded">×{count}</span>
                   </div>
                 ))}
               </div>
